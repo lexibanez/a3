@@ -13,19 +13,22 @@ from collections import namedtuple
 
 # Namedtuple to hold the values retrieved from json messages.
 # TODO: update this named tuple to use DSP protocol keys
-DataTuple = namedtuple('DataTuple', ['foo','baz'])
 
-def extract_json(json_msg:str) -> DataTuple:
+response = namedtuple('response', ['type','message','token'], defaults= [None, None, None])
+
+def extract_json(json_msg:str) -> response:
   '''
   Call the json.loads function on a json string and convert it to a DataTuple object
   
   TODO: replace the pseudo placeholder keys with actual DSP protocol keys
   '''
   try:
-    json_obj = json.loads(json_msg)
-    foo = json_obj['foo']
-    baz = json_obj['bar']['baz']
+    message_dict = json.loads(json_msg)
+    type = message_dict['response']['type']
+    message = message_dict['response']['message']
+    token = message_dict['response'].get('token')
+
   except json.JSONDecodeError:
     print("Json cannot be decoded.")
 
-  return DataTuple(foo, baz)
+  return response(type, message, token)
