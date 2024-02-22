@@ -4,6 +4,7 @@
 
 from pathlib import Path
 from Profile import Profile, Post, DsuProfileError
+from ds_client import send
 
 
 def get_last_option(options):
@@ -152,6 +153,14 @@ def edit_dsu_file(journal: Profile, dsu_path: str, command=None, args=None):
                     break
             journal.del_post(index)
             journal.save_profile(dsu_path)
+        if '-publish' in args:
+            IP = input("Enter the server ip: ")
+            for arg in args:
+                if arg.isdigit():
+                    index = int(arg)
+                    break
+            post = journal.get_posts()[index]["entry"]
+            send(IP, 3021, journal.username, journal.password, post, journal.bio)
 
         return
 

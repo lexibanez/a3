@@ -8,6 +8,8 @@
 
 # usr: lexibanez pwd: passwordlol
 # token: b4337385-d222-4dfc-bc91-0450e40c0de3
+# server ip: 168.235.86.101
+# port: 3021
 
 from ds_protocol import extract_json
 import socket
@@ -56,7 +58,7 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
     resp = recv.readline()
     response_tuple = extract_json(resp)
-
+    print(response_tuple.message)
 
   if bio:
     bio = {
@@ -67,26 +69,28 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
      }
   }
   
+    bio_string = json.dumps(bio)
 
-  bio_string = json.dumps(bio)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
+      client.connect((server, port))
 
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-    client.connect((server, port))
+      send = client.makefile('w')
+      recv = client.makefile('r')
 
-    send = client.makefile('w')
-    recv = client.makefile('r')
+      send.write(bio_string + '\r\n')
+      send.flush()
 
-    send.write(bio_string + '\r\n')
-    send.flush()
-
-    resp = recv.readline()
-    response_tuple = extract_json(resp)
+      resp = recv.readline()
+      response_tuple = extract_json(resp)
+      if response_tuple.type == 'error':
+        print(response_tuple.message)
+        return False
 
   return True
 
 
 
-def join_server(server, port, username, password,):
+def join_server(server, port, username, password):
   data = {
         "join": {
             "username": username,
@@ -110,8 +114,6 @@ def join_server(server, port, username, password,):
     resp = recv.readline()
     # extract the server response into a named tuple
     response_tuple = extract_json(resp)
+    print(response_tuple.message)
 
   return response_tuple
-
-if __name__ == '__main__':
-    send('168.235.86.101', 3021, 'lexibanez', 'passwordlol', ':0', 'testbio')

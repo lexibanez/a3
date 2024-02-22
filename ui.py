@@ -10,7 +10,7 @@ from pathlib import Path
 from Profile import Profile
 
 
-edit_menu_options_list = ['-usr', '-pwd', '-bio', '-addpost', '-delpost']
+edit_menu_options_list = ['-usr', '-pwd', '-bio', '-addpost', '-delpost', '-publish']
 print_menu_options_list = ['-usr', '-pwd', '-bio', '-posts', '-post', '-all']
 
 
@@ -65,7 +65,8 @@ def run_ui(option):
                 # if the file does not exist, create it
                 if not (directory / (file_name + '.dsu')).exists():
                     dsu_path = create_file(directory, ['-n', file_name])
-                    journal = Profile(username, password, bio)
+                    journal = Profile(None, username, password)
+                    journal.bio = bio
                     journal.save_profile(dsu_path)
                     print("Dsu file created and currently open")
 
@@ -103,7 +104,6 @@ def run_ui(option):
                             option = input("Enter a command: ")
                         args.append(option)
                         option_input = handle_edit_options(option, journal)
-                        print("Changes Saved")
                         args.append(option_input)
 
                     elif command == "p":
@@ -164,7 +164,6 @@ def run_ui(option):
                         option = input("Enter a command: ")
                     args.append(option)
                     option_input = handle_edit_options(option, journal)
-                    print("Changes Saved")
                     args.append(option_input)
 
                 elif command == "p":
@@ -202,6 +201,7 @@ def edit_menu_options():
     print("-bio: change your bio")
     print("-addpost: make a post")
     print("-delpost: delete a post")
+    print("-publish: publish to a server")
     print("-------------------------------------")
 
 
@@ -264,6 +264,18 @@ def handle_edit_options(option, journal):
                 continue
             break
         return int(id)
+    if option == '-publish':
+        while True:
+            get_all_posts(journal)
+            id = input("Enter the id of the post you would like to publish: ")
+            if not id.isdigit():
+                print("ID must be a number")
+                continue
+            status = check_input(id)
+            if not status:
+                continue
+            break
+        return id
 
 
 def handle_print_options(option, journal):

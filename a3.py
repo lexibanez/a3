@@ -7,6 +7,7 @@
 # Lex Ibanez
 # laibanez@uci.edu
 # 70063614
+# 168.235.86.101
 
 from ui import run_ui
 
@@ -25,7 +26,7 @@ def main():
             run_ui(user_input)
 
 
-options = ['admin', 'o', 'c', 'q']
+options = ['o', 'c', 'q']
 
 if __name__ == '__main__':
     main()
