@@ -37,28 +37,30 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     return False
   
   token = response_tuple.token
-  post = {
-    "token": token, 
-    "post": {
-       "entry": message, 
-       "timestamp" : time.time()
-     }
-  }
   
-  post_string = json.dumps(post)
+  if message:
+    post = {
+      "token": token, 
+      "post": {
+         "entry": message, 
+         "timestamp" : time.time()
+       }
+    }
 
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-    client.connect((server, port))
+    post_string = json.dumps(post)
 
-    send = client.makefile('w')
-    recv = client.makefile('r')
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
+      client.connect((server, port))
 
-    send.write(post_string + '\r\n')
-    send.flush()
+      send = client.makefile('w')
+      recv = client.makefile('r')
 
-    resp = recv.readline()
-    response_tuple = extract_json(resp)
-    print(response_tuple.message)
+      send.write(post_string + '\r\n')
+      send.flush()
+
+      resp = recv.readline()
+      response_tuple = extract_json(resp)
+      print(response_tuple.message)
 
   if bio:
     bio = {
@@ -117,3 +119,6 @@ def join_server(server, port, username, password):
     print(response_tuple.message)
 
   return response_tuple
+
+# if __name__ == '__main__':
+#   join_server()

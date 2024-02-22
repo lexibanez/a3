@@ -8,6 +8,8 @@
 # laibanez@uci.edu
 # 70063614
 # 168.235.86.101
+# C:\Users\lexib\OneDrive\Desktop\ICS32\assignments\a3tests
+# TODO handle exception in the client
 
 from ui import run_ui
 

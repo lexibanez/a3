@@ -10,7 +10,7 @@ from pathlib import Path
 from Profile import Profile
 
 
-edit_menu_options_list = ['-usr', '-pwd', '-bio', '-addpost', '-delpost', '-publish']
+edit_menu_options_list = ['-usr', '-pwd', '-bio', '-addpost', '-delpost', '-publish', '-publishbio']
 print_menu_options_list = ['-usr', '-pwd', '-bio', '-posts', '-post', '-all']
 
 
@@ -202,6 +202,7 @@ def edit_menu_options():
     print("-addpost: make a post")
     print("-delpost: delete a post")
     print("-publish: publish to a server")
+    print("-publishbio: publish a new bio to a server")
     print("-------------------------------------")
 
 
@@ -276,6 +277,14 @@ def handle_edit_options(option, journal):
                 continue
             break
         return id
+    if option == '-publishbio':
+        while True:
+            new_bio = input("Enter a new bio to publish: ")
+            status = check_spaces(new_bio)
+            if not status:
+                continue
+            break
+        return new_bio
 
 
 def handle_print_options(option, journal):
