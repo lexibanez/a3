@@ -10,7 +10,8 @@ from pathlib import Path
 from Profile import Profile
 
 
-edit_menu_options_list = ['-usr', '-pwd', '-bio', '-addpost', '-delpost', '-publish', '-publishbio']
+edit_menu_options_list = ['-usr', '-pwd', '-bio', '-addpost',
+                          '-delpost', '-publish', '-publishbio']
 print_menu_options_list = ['-usr', '-pwd', '-bio', '-posts', '-post', '-all']
 
 

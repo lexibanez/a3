@@ -163,14 +163,16 @@ def edit_dsu_file(journal: Profile, dsu_path: str, command=None, args=None):
                     index = int(arg)
                     break
             post = journal.get_posts()[index]["entry"]
-            send(journal.dsuserver, 3021, journal.username, journal.password, post, journal.bio)
+            send(journal.dsuserver, 3021, journal.username,
+                 journal.password, post, journal.bio)
         if '-publishbio' in args:
             new_bio = get_argument_value(args, '-publishbio')
             if journal.dsuserver is None:
                 IP = input("Enter the server ip: ")
                 journal.dsuserver = IP
                 journal.save_profile(dsu_path)
-            send(journal.dsuserver, 3021, journal.username, journal.password, None, new_bio)
+            send(journal.dsuserver, 3021, journal.username,
+                 journal.password, None, new_bio)
 
         return
 
