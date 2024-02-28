@@ -6,10 +6,6 @@
 # laibanez@uci.edu
 # 70063614
 
-# usr: lexibanez pwd: passwordlol
-# token: b4337385-d222-4dfc-bc91-0450e40c0de3
-# server ip: 168.235.86.101
-# port: 3021
 
 from ds_protocol import extract_json
 import socket
@@ -32,8 +28,11 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
   response_tuple = join_server(server, port, username, password)
 
   # if username or password is taken, return False
-  if response_tuple.type == 'error':
-    print(response_tuple.message)
+  try:
+    if response_tuple.type == 'error':
+      print(response_tuple.message)
+      return False
+  except AttributeError:
     return False
   
   token = response_tuple.token
@@ -104,21 +103,27 @@ def join_server(server, port, username, password):
   json_string = json.dumps(data)
 
   # start client and join DSP server
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-    client.connect((server, port))
+  try:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
+      client.connect((server, port))
 
-    send = client.makefile('w')
-    recv = client.makefile('r')
+      send = client.makefile('w')
+      recv = client.makefile('r')
 
-    send.write(json_string + '\r\n')
-    send.flush()
+      send.write(json_string + '\r\n')
+      send.flush()
 
-    resp = recv.readline()
-    # extract the server response into a named tuple
-    response_tuple = extract_json(resp)
-    print(response_tuple.message)
-
-  return response_tuple
-
-# if __name__ == '__main__':
-#   join_server()
+      resp = recv.readline()
+      # extract the server response into a named tuple
+      response_tuple = extract_json(resp)
+      print(response_tuple.message)
+      
+      return response_tuple
+    
+  except TimeoutError as e:
+    print(e)
+    print('Try a different IP or port')
+    return False
+  except socket.gaierror:
+    print('Invalid IP address')
+    return False

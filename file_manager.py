@@ -190,9 +190,12 @@ def edit_dsu_file(journal: Profile, dsu_path: str, command=None, args=None):
             except IndexError:
                 print("Index out of bounds. Please try again.")
         if '-all' in args:
-            print(journal.__str__())
+            print(f'The saved dsuserver is {journal.dsuserver}')
+            print(f'Your username is {journal.username}')
+            print(f'Your password is {journal.password}')
+            print(f'Your bio is {journal.bio}')
+            print('Your posts are:')
             get_all_posts(journal)
-
         return
 
 
